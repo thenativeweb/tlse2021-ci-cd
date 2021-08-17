@@ -7,7 +7,7 @@ const rootContainer = document.querySelector('#root');
 ReactDOM.render(
   <AdjustableRotatingImage
     src='http://localhost:8000/logo'
-    description='a spinning image'
+    descriptionUrl='http://localhost:8000/logo_description'
   />,
   rootContainer
 );

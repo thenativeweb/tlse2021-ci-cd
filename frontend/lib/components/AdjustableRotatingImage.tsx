@@ -2,7 +2,7 @@ import { RotatingImage } from './RotatingImage';
 import { Slider } from './Slider';
 import { Speed } from '../types/Speed';
 import styled from 'styled-components';
-import React, { FunctionComponent, ReactElement, useState } from 'react';
+import React, { FunctionComponent, ReactElement, useEffect, useState } from 'react';
 
 const widthStepInPixel = 50;
 const maxStepCount = 9;
@@ -19,17 +19,31 @@ const ImageContainer = styled.div`
   z-index: -1;
 `;
 
+const DescriptionContainer = styled.h1`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
 interface AdjustableRotatingImageProps {
   src: string;
-  description: string;
+  descriptionUrl: string;
 }
 
 const AdjustableRotatingImage: FunctionComponent<AdjustableRotatingImageProps> = function ({
   src,
-  description
+  descriptionUrl
 }): ReactElement {
+  const [ description, setDescription ] = useState<string>('loading...');
   const [ speed, setSpeed ] = useState(Speed.normal);
   const [ widthInPixel, setWidthInPixel ] = useState(Math.ceil(maxStepCount / 2) * widthStepInPixel);
+
+  useEffect((): void => {
+    (async (): Promise<void> => {
+      const descriptionResponse = await fetch(descriptionUrl);
+      setDescription(await descriptionResponse.text());
+    })()
+  });
 
   return (
     <React.Fragment>
@@ -41,6 +55,9 @@ const AdjustableRotatingImage: FunctionComponent<AdjustableRotatingImageProps> =
           rotationSpeed={ speed }
         />
       </ImageContainer>
+      <DescriptionContainer>
+        { description }
+      </DescriptionContainer>
       <Slider
         min={ Speed.slowest }
         max={ Speed.fastest }
