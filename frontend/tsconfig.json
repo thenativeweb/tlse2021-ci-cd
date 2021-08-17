@@ -3,22 +3,20 @@
     "baseUrl": ".",
     "declaration": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
+    "noEmit": true,
     "lib": ["esnext", "DOM"],
     "module": "ESNext",
     "moduleResolution": "node",
-    "noEmit": true,
     "outDir": "build",
     "resolveJsonModule": true,
     "strict": true,
     "target": "ESNext"
   },
   "include": [
-    "./**/*.ts",
-    "./**/*.tsx"
+    "./**/*.ts"
   ],
   "exclude": [
-    "./node_modules"
+    "./node_modules",
+    "./build"
   ]
 }
