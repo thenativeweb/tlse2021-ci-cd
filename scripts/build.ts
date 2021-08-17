@@ -25,6 +25,9 @@ await build({
   target: [ 'esnext' ],
   logLevel: 'info',
   watch: isWatchMode,
+  loader: {
+    ".svg": "dataurl"
+  },
 
   plugins: [
     htmlPlugin()
