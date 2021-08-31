@@ -53,3 +53,25 @@ jobs:
         run: kubectl apply -f ./manifest.yaml
       - name: Verify deployment for the frontend
         run: kubectl --namespace tlse-latest rollout status deployment/tlse-frontend
+
+      # backend
+      - name: Build and push the backend image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./backend
+          tags:
+            ghcr.io/thenativeweb/tlse-backend:${{ github.sha }}
+          build-args: |
+            "BACKEND_URL=api.gitops.tlse.thenativeweb.io"
+      - name: Insert config to manifest
+        run: 'cat ./deployments/backend.yaml | envsubst > manifest.yaml'
+        env:
+          CONTAINER_REGISTRY_USER: ${{ secrets.GHCR_USER }}
+          CONTAINER_REGISTRY_PASSWORD: ${{ secrets.GHCR_PASSWORD }}
+          GIT_SHA: ${{ github.sha }}
+
+      - name: Deploy the manifest for the backend
+        run: kubectl apply -f ./manifest.yaml
+      - name: Verify deployment for the backend
+        run: kubectl --namespace tlse-latest rollout status deployment/tlse-backend

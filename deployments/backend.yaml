@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tlse-latest
+  labels:
+    name: tlse-latest
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: container-registry
+  namespace: tlse-latest
+type: kubernetes.io/dockerconfigjson
+stringData:
+  .dockerconfigjson: |
+    {
+      "auths": {
+        "ghcr.io": {
+          "username": "${CONTAINER_REGISTRY_USER}",
+          "password": "${CONTAINER_REGISTRY_PASSWORD}"
+        }
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tlse-backend
+  namespace: tlse-latest
+  labels:
+    app: tlse-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tlse-backend
+  template:
+    metadata:
+      labels:
+        app: tlse-backend
+    spec:
+      containers:
+        - name: tlse-backend
+          image: ghcr.io/thenativeweb/tlse-backend:${GIT_SHA}
+          ports:
+            - name: http
+              containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+          imagePullPolicy: "Always"
+      imagePullSecrets:
+        - name: docker-container-registry
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: tlse-backend
+  namespace: tlse-latest
+  labels:
+    app: tlse-backend
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app: tlse-backend
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tlse-backend
+  namespace: tlse-latest
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - secretName: thenativeweb-io-backend
+      hosts:
+        - api.gitops.tlse.thenativeweb.io
+  rules:
+    - host: api.gitops.tlse.thenativeweb.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tlse-backend
+                port:
+                  name: http
