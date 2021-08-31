@@ -41,7 +41,7 @@ jobs:
           tags:
             ghcr.io/thenativeweb/tlse-frontend:${{ github.sha }}
           build-args: |
-            "BACKEND_URL=api.gitops.tlse.thenativeweb.io"
+            "BACKEND_URL=https://api.gitops.tlse.thenativeweb.io"
       - name: Insert config to manifest
         run: 'cat ./deployments/frontend.yaml | envsubst > manifest.yaml'
         env:
@@ -62,8 +62,6 @@ jobs:
           context: ./backend
           tags:
             ghcr.io/thenativeweb/tlse-backend:${{ github.sha }}
-          build-args: |
-            "BACKEND_URL=https://api.gitops.tlse.thenativeweb.io"
       - name: Insert config to manifest
         run: 'cat ./deployments/backend.yaml | envsubst > manifest.yaml'
         env:
