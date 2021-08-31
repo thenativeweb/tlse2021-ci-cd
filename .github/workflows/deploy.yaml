@@ -39,7 +39,7 @@ jobs:
           push: true
           context: ./frontend
           tags:
-            ghcr.io/thenativeweb/tlse:${{ github.sha }}
+            ghcr.io/thenativeweb/tlse-frontend:${{ github.sha }}
           build-args: |
             "BACKEND_URL=api.gitops.tlse.thenativeweb.io"
       - name: Insert config to manifest
