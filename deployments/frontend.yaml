@@ -84,9 +84,9 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   tls:
-    secretName: thenativeweb-io-frontend
-    hosts:
-      - gitops.tlse.thenativeweb.io
+    - secretName: thenativeweb-io-frontend
+      hosts:
+        - gitops.tlse.thenativeweb.io
   rules:
     - host: gitops.tlse.thenativeweb.io
       http:
