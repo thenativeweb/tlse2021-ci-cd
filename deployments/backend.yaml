@@ -47,12 +47,12 @@ spec:
               containerPort: 8000
           readinessProbe:
             httpGet:
-              path: /
+              path: /logo
               port: http
             initialDelaySeconds: 10
           livenessProbe:
             httpGet:
-              path: /
+              path: /logo
               port: http
             initialDelaySeconds: 10
           imagePullPolicy: "Always"
