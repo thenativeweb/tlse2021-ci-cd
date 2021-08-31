@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 
 const rootContainer = document.querySelector('#root');
 
+/* eslint-disable no-process-env */
 ReactDOM.render(
   <AdjustableRotatingImage
     src={ `${process.env.BACKEND_URL}/logo` }
@@ -11,3 +12,4 @@ ReactDOM.render(
   />,
   rootContainer
 );
+/* eslint-enable no-process-env */
