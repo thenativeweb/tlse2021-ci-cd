@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tlse-pr-${PR_NUMBER}
+  labels:
+    name: tlse-pr-${PR_NUMBER}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: container-registry
+  namespace: tlse-pr-${PR_NUMBER}
+type: kubernetes.io/dockerconfigjson
+stringData:
+  .dockerconfigjson: |
+    {
+      "auths": {
+        "ghcr.io": {
+          "username": "${CONTAINER_REGISTRY_USER}",
+          "password": "${CONTAINER_REGISTRY_PASSWORD}"
+        }
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tlse-backend
+  namespace: tlse-pr-${PR_NUMBER}
+  labels:
+    app: tlse-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tlse-backend
+  template:
+    metadata:
+      labels:
+        app: tlse-backend
+    spec:
+      containers:
+        - name: tlse-backend
+          image: ghcr.io/thenativeweb/tlse-backend:pr-${PR_NUMBER}
+          ports:
+            - name: http
+              containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /logo
+              port: http
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /logo
+              port: http
+            initialDelaySeconds: 10
+          imagePullPolicy: "Always"
+      imagePullSecrets:
+        - name: docker-container-registry
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: tlse-backend
+  namespace: tlse-pr-${PR_NUMBER}
+  labels:
+    app: tlse-backend
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app: tlse-backend
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tlse-backend
+  namespace: tlse-pr-${PR_NUMBER}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - secretName: thenativeweb-io-backend
+      hosts:
+        - api.pr-${PR_NUMBER}.gitops.tlse.thenativeweb.io
+  rules:
+    - host: api.pr-${PR_NUMBER}.gitops.tlse.thenativeweb.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tlse-backend
+                port:
+                  name: http
