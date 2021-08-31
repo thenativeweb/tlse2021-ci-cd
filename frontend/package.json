@@ -1,27 +1,43 @@
 {
   "name": "fsmt-frontend",
   "version": "0.0.1",
+  "description": "Example repository for CI/CD with gitops.",
+  "contributors": [
+    {
+      "name": "Alexander Kampf",
+      "email": "alexander.kampf@thenativeweb.io"
+    },
+    {
+      "name": "Hannes Leutloff",
+      "email": "hannes.leutloff@thenativeweb.io"
+    }
+  ],
   "private": true,
+  "main": "",
+  "types": "",
+  "type": "module",
+  "dependencies": {
+    "@types/react": "17.0.14",
+    "@types/react-dom": "17.0.9",
+    "@types/styled-components": "5.1.11",
+    "http-server": "13.0.0",
+    "normalize.css": "8.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "styled-components": "5.3.0"
+  },
+  "devDependencies": {
+    "@chialab/esbuild-plugin-html": "0.8.13",
+    "esbuild": "0.12.15",
+    "roboter": "12.2.3"
+  },
   "scripts": {
     "build": "node --loader=ts-node/esm --experimental-specifier-resolution=node --no-warnings scripts/build.ts",
     "build:production": "NODE_ENV=production npm run build",
     "build:watch": "WATCH=true npm run build",
     "serve": "http-server build"
   },
-  "type": "module",
-  "dependencies": {
-    "@types/react": "17.0.14",
-    "@types/react-dom": "17.0.9",
-    "@types/styled-components": "5.1.11",
-    "normalize.css": "8.0.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "styled-components": "5.3.0",
-    "http-server": "13.0.0"
-  },
-  "devDependencies": {
-    "@chialab/esbuild-plugin-html": "0.8.13",
-    "esbuild": "0.12.15",
-    "roboter": "11.7.7"
-  }
+  "repository": "https://github.com/thenativeweb/tlse2021-ci-cd",
+  "keywords": [],
+  "license": "MIT"
 }
