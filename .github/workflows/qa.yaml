@@ -1,0 +1,41 @@
+name: QA
+
+on: pull_request
+
+jobs:
+  qa:
+    name: QA
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: [ '16.x' ]
+        os: [ ubuntu-latest ]
+
+    steps:
+      # setup
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # frontend
+      - name: Install dependencies for frontend
+        run: |
+          npm install
+        working-directory: ./frontend
+      - name: Run roboter for frontend
+        run: |
+          npx roboter
+        working-directory: ./frontend
+
+      # backend
+      - name: Install dependencies for backend
+        run: |
+          npm install
+        working-directory: ./backend
+      - name: Run roboter for backend
+        run: |
+          npx roboter
+        working-directory: ./backend

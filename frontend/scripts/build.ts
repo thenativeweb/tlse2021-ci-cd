@@ -26,7 +26,10 @@ await build({
   logLevel: 'info',
   watch: isWatchMode,
   loader: {
-    ".svg": "dataurl"
+    '.svg': 'dataurl'
+  },
+  define: {
+    'process.env.BACKEND_URL': JSON.stringify(process.env.BACKEND_URL ?? 'http://localhost:8000')
   },
 
   plugins: [

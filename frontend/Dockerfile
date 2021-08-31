@@ -1,6 +1,8 @@
 FROM node:16.6.2-alpine as builder
 WORKDIR /app
 
+ARG BACKEND_URL
+
 ADD package.json package.json
 ADD package-lock.json package-lock.json
 

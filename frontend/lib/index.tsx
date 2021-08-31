@@ -6,8 +6,8 @@ const rootContainer = document.querySelector('#root');
 
 ReactDOM.render(
   <AdjustableRotatingImage
-    src='http://localhost:8000/logo'
-    descriptionUrl='http://localhost:8000/logo_description'
+    src={ `${process.env.BACKEND_URL}/logo` }
+    descriptionUrl={ `${process.env.BACKEND_URL}/logo_description` }
   />,
   rootContainer
 );

@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  qa:
+    name: Deploy
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: [ '16.x' ]
+        os: [ ubuntu-latest ]
+
+    steps:
+      # setup
+      - name: Checkout out the repository
+        uses: actions/checkout@v2
+      - name: Log in to the GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 tlse2021-ci-cd
+
+      # frontend
+      - name: Build and push the frontend image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./frontend
+          tags:
+            ghcr.io/thenativeweb/tlse:${{ github.sha }}
+          build-args: |
+            "BACKEND_URL=api.gitops.tlse.thenativeweb.io"
+      - name: Insert config to manifest
+        run: 'cat ./deployments/frontend.yaml | envsubst > manifest.yaml'
+        env:
+          CONTAINER_REGISTRY_USER: ${{ secrets.GHCR_USER }}
+          CONTAINER_REGISTRY_PASSWORD: ${{ secrets.GHCR_PASSWORD }}
+          GIT_SHA: ${{ github.sha }}
+
+      - name: Deploy the manifest for the frontend
+        run: kubectl apply -f ./manifest.yaml
+      - name: Verify deployment for the frontend
+        run: kubectl --namespace tlse-latest rollout status deployment/tlse-frontend
