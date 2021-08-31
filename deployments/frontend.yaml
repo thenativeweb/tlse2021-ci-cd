@@ -89,12 +89,12 @@ spec:
       - gitops.tlse.thenativeweb.io
   rules:
     - host: gitops.tlse.thenativeweb.io
-http:
-  paths:
-    - path: /
-      pathType: Prefix
-      backend:
-        service:
-          name: tlse-frontend
-          port:
-            name: http
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tlse-frontend
+                port:
+                  name: http
