@@ -41,6 +41,12 @@ const AdjustableRotatingImage: FunctionComponent<AdjustableRotatingImageProps> =
   useEffect((): void => {
     (async (): Promise<void> => {
       const descriptionResponse = await fetch(descriptionUrl);
+      const status = descriptionResponse.status;
+
+      if (status !== 200) {
+        return setDescription('loading...');
+      }
+
       setDescription(await descriptionResponse.text());
     })()
   });
