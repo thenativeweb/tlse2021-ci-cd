@@ -23,7 +23,7 @@ jobs:
       # frontend
       - name: Install dependencies for frontend
         run: |
-          npm install
+          npm clean-install
         working-directory: ./frontend
       - name: Run roboter for frontend
         run: |
@@ -33,7 +33,7 @@ jobs:
       # backend
       - name: Install dependencies for backend
         run: |
-          npm install
+          npm clean-install
         working-directory: ./backend
       - name: Run roboter for backend
         run: |

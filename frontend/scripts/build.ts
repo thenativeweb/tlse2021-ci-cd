@@ -29,6 +29,7 @@ await build({
     '.svg': 'dataurl'
   },
   define: {
+    // eslint-disable-next-line no-process-env,@typescript-eslint/naming-convention
     'process.env.BACKEND_URL': JSON.stringify(process.env.BACKEND_URL ?? 'http://localhost:8000')
   },
 

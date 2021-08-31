@@ -23,7 +23,7 @@ const DescriptionContainer = styled.h1`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
+`;
 
 interface AdjustableRotatingImageProps {
   src: string;
@@ -39,16 +39,16 @@ const AdjustableRotatingImage: FunctionComponent<AdjustableRotatingImageProps> =
   const [ widthInPixel, setWidthInPixel ] = useState(Math.ceil(maxStepCount / 2) * widthStepInPixel);
 
   useEffect((): void => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     (async (): Promise<void> => {
       const descriptionResponse = await fetch(descriptionUrl);
-      const status = descriptionResponse.status;
 
-      if (status !== 200) {
+      if (descriptionResponse.status !== 200) {
         return setDescription('loading...');
       }
 
       setDescription(await descriptionResponse.text());
-    })()
+    })();
   });
 
   return (
