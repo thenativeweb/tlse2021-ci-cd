@@ -22,7 +22,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       # frontend
-      - name: Install depedencies for frontend
+      - name: Install dependencies for frontend
         run: |
           npm clean-install
         working-directory: ./frontend
