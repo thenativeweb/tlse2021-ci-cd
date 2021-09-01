@@ -69,7 +69,7 @@ const AdjustableRotatingImage: FunctionComponent<AdjustableRotatingImageProps> =
         max={ Speed.fastest }
         step={ 1 }
         value={ speed }
-        label="Speeeeeeeeeeed"
+        label='Speeeeeeeeeeed'
         onChange={ (newValue): void => {
           setSpeed(newValue);
         } }
