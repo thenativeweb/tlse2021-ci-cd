@@ -27,7 +27,7 @@
     "styled-components": "5.3.0"
   },
   "devDependencies": {
-    "@chialab/esbuild-plugin-html": "0.8.13",
+    "@chialab/esbuild-plugin-html": "0.17.2",
     "esbuild": "0.12.15",
     "roboter": "12.2.3"
   },
