@@ -29,7 +29,7 @@
   "devDependencies": {
     "@chialab/esbuild-plugin-html": "0.8.13",
     "esbuild": "0.12.15",
-    "roboter": "12.2.3"
+    "roboter": "12.7.1"
   },
   "scripts": {
     "build": "node --loader=ts-node/esm --experimental-specifier-resolution=node --no-warnings scripts/build.ts",
