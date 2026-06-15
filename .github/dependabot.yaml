@@ -2,11 +2,12 @@ version: 2
 updates:
   - package-ecosystem: npm
     directory: "/"
+    cooldown:
+      default-days: 7
     schedule:
       interval: weekly
     assignees:
-      - dotKuro
-      - yeldiRium
+      - thenativeweb/internal_dev
     # For semantic release
     commit-message:
       prefix: fix
